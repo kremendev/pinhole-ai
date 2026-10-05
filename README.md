@@ -32,7 +32,9 @@ tests/              in-browser test page for layout, menu and form behaviour
 - [x] Contact form (Name, Email, Message)
 - [x] Responsive layout
 - [x] Test and review
-- [ ] Package: wireframe PDFs + zipped site
+- [x] Package: wireframe PDFs + zipped site (attached to the monday task)
+
+To rebuild the package, zip `index.html`, `css/`, `js/` and `assets/` into `dist/pinhole-site.zip`. The `dist/` folder is git-ignored.
 
 ## Brand rules
 
