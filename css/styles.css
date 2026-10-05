@@ -418,6 +418,90 @@ a {
   color: var(--brand);
 }
 
+/* ---------- Contact ---------- */
+
+.contact {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.contact-details {
+  font-style: normal;
+}
+
+.contact-details p {
+  margin-bottom: 1.5rem;
+}
+
+.contact-label {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+.contact-details a {
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+
+.contact-details a:hover {
+  text-decoration: underline;
+}
+
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--brand);
+  border-radius: var(--radius);
+  background: var(--light);
+  color: var(--text);
+  font: inherit;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline-offset: 0;
+}
+
+.field [aria-invalid="true"] {
+  border-width: 2px;
+  border-left-width: 6px;
+}
+
+.field-error {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+}
+
+.field-error:empty {
+  display: none;
+}
+
+.form-status:not(:empty) {
+  margin-top: 1.25rem;
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius);
+  background: var(--brand);
+  color: var(--light);
+}
+
 /* ---------- Footer ---------- */
 
 .site-footer {
