@@ -157,28 +157,37 @@ a {
   width: 120px;
 }
 
+/* Mobile: links stack in a panel under the header. With JS the panel
+   is hidden behind the menu button; without JS it simply stays open. */
+.site-nav {
+  flex-basis: 100%;
+}
+
+.js .site-nav {
+  display: none;
+}
+
+.js .site-nav.is-open {
+  display: block;
+}
+
 .site-nav ul {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1.75rem;
+  flex-direction: column;
   margin: 0;
-  padding: 0;
+  padding: 0 0 1rem;
   list-style: none;
 }
 
 .site-nav a {
-  display: inline-block;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid transparent;
+  display: block;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--light) 20%, transparent);
   color: var(--light);
   font-size: 0.95rem;
   letter-spacing: 0.05em;
   text-decoration: none;
   transition: border-color 0.2s;
-}
-
-.site-nav a:hover {
-  border-bottom-color: var(--light);
 }
 
 .site-header :focus-visible,
@@ -190,6 +199,58 @@ a {
 
 .nav-toggle {
   display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--light) 50%, transparent);
+  border-radius: var(--radius);
+  background: transparent;
+  cursor: pointer;
+}
+
+.js .nav-toggle {
+  display: inline-flex;
+}
+
+/* Three-bar icon that turns into a cross when the menu is open */
+.nav-toggle-bar,
+.nav-toggle-bar::before,
+.nav-toggle-bar::after {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--light);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.nav-toggle-bar::before,
+.nav-toggle-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.nav-toggle-bar::before {
+  top: -7px;
+}
+
+.nav-toggle-bar::after {
+  top: 7px;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar {
+  background: transparent;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar::before {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar::after {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 /* ---------- Hero ---------- */
@@ -197,21 +258,22 @@ a {
 .hero {
   display: grid;
   place-items: start center;
-  min-height: calc(100vh - var(--header-height));
-  min-height: calc(100svh - var(--header-height));
+  /* Fill the first screen, but don't grow endlessly on very tall displays */
+  min-height: min(calc(100vh - var(--header-height)), 900px);
+  min-height: min(calc(100svh - var(--header-height)), 900px);
   padding: clamp(4rem, 16vh, 9rem) var(--gutter) 4rem;
   background:
     linear-gradient(
       color-mix(in srgb, var(--brand) 45%, transparent),
       color-mix(in srgb, var(--brand) 5%, transparent)
     ),
-    url("../assets/images/hero-mountains-1920.jpg") center 70% / cover no-repeat;
+    url("../assets/images/hero-mountains-1200.jpg") center 70% / cover no-repeat;
   color: var(--light);
   text-align: center;
 }
 
 .hero h1 {
-  max-width: 16ch;
+  max-width: 20ch;
   margin: 0 auto 2rem;
   font-size: clamp(2.25rem, 6vw, 4.5rem);
   text-wrap: balance;
@@ -366,8 +428,7 @@ a {
 }
 
 .caption-title {
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: var(--brand);
 }
 
@@ -537,6 +598,84 @@ a {
 
 .site-footer a {
   color: var(--light);
+}
+
+/* ---------- Responsive layout (mobile-first) ---------- */
+
+@media (min-width: 600px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .js .nav-toggle {
+    display: none;
+  }
+
+  .site-nav,
+  .js .site-nav {
+    display: block;
+    flex-basis: auto;
+  }
+
+  .site-nav ul {
+    flex-direction: row;
+    gap: 0.25rem 1.75rem;
+    padding: 0;
+  }
+
+  .site-nav a {
+    display: inline-block;
+    padding: 0.5rem 0;
+    border-bottom-color: transparent;
+  }
+
+  .site-nav a:hover {
+    border-bottom-color: var(--light);
+  }
+
+  .steps {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .contact {
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+  }
+
+  .footer-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --section-space: 6rem;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .testimonials {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Sharper hero photo on large or high-density screens */
+@media (min-width: 1200px), (min-width: 768px) and (min-resolution: 2dppx) {
+  .hero {
+    background-image:
+      linear-gradient(
+        color-mix(in srgb, var(--brand) 45%, transparent),
+        color-mix(in srgb, var(--brand) 5%, transparent)
+      ),
+      url("../assets/images/hero-mountains-1920.jpg");
+  }
 }
 
 /* ---------- Motion preferences ---------- */

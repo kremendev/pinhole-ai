@@ -1,3 +1,35 @@
+// Mobile navigation: the menu button opens and closes the nav panel.
+const navToggle = document.querySelector('.nav-toggle');
+const nav = document.querySelector('#site-nav');
+
+if (navToggle && nav) {
+  const setMenuOpen = (open) => {
+    navToggle.setAttribute('aria-expanded', String(open));
+    navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    nav.classList.toggle('is-open', open);
+  };
+
+  navToggle.addEventListener('click', () => {
+    setMenuOpen(navToggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  // Close after choosing a section, or on Escape.
+  nav.addEventListener('click', (event) => {
+    if (event.target.closest('a')) setMenuOpen(false);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && nav.classList.contains('is-open')) {
+      setMenuOpen(false);
+      navToggle.focus();
+    }
+  });
+}
+
+// Keep the footer copyright year current.
+const year = document.querySelector('#year');
+if (year) year.textContent = new Date().getFullYear();
+
 // Contact form: validate fields and show a confirmation. The site has no
 // backend, so nothing is sent; connect the form to a mail service before
 // going live.
