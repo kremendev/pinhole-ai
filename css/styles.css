@@ -292,6 +292,38 @@ a {
   color: var(--brand);
 }
 
+/* ---------- How it works ---------- */
+
+.steps {
+  display: grid;
+  gap: 2.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  text-align: center;
+}
+
+.step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.25rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+}
+
+.step p {
+  max-width: 34ch;
+  margin-inline: auto;
+}
+
 /* ---------- Footer ---------- */
 
 .site-footer {
