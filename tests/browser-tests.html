@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Pinhole Photography – browser tests</title></head>
+<body>
+<iframe id="f375" src="../index.html" width="375" height="800"></iframe>
+<iframe id="f768" src="../index.html" width="768" height="800"></iframe>
+<iframe id="f1440" src="../index.html" width="1440" height="900"></iframe>
+<pre id="results"></pre>
+<script>
+const out = [];
+const check = (name, pass, detail = '') => out.push(`${pass ? 'PASS' : 'FAIL'}  ${name}${detail ? '  (' + detail + ')' : ''}`);
+const tick = () => new Promise((r) => setTimeout(r, 50));
+
+async function run() {
+  // --- Layout at each width ---
+  for (const id of ['f375', 'f768', 'f1440']) {
+    const doc = document.getElementById(id).contentDocument;
+    const win = document.getElementById(id).contentWindow;
+    const de = doc.documentElement;
+    check(`${id}: no horizontal overflow`, de.scrollWidth <= de.clientWidth, `scrollWidth ${de.scrollWidth} vs ${de.clientWidth}`);
+    const nav = doc.getElementById('site-nav');
+    const toggle = doc.querySelector('.nav-toggle');
+    const navShown = win.getComputedStyle(nav).display !== 'none';
+    const toggleShown = win.getComputedStyle(toggle).display !== 'none';
+    if (id === 'f375') {
+      check(`${id}: menu button visible, nav hidden`, toggleShown && !navShown);
+    } else {
+      check(`${id}: nav visible, menu button hidden`, navShown && !toggleShown);
+    }
+    const cols = (sel) => win.getComputedStyle(doc.querySelector(sel)).gridTemplateColumns.split(' ').length;
+    check(`${id}: gallery columns`, true, String(cols('.gallery')));
+    check(`${id}: js ran (year set, js class)`, doc.getElementById('year').textContent === String(new Date().getFullYear()) && de.classList.contains('js'));
+  }
+
+  // --- Mobile menu behaviour (375px) ---
+  {
+    const doc = document.getElementById('f375').contentDocument;
+    const win = document.getElementById('f375').contentWindow;
+    const nav = doc.getElementById('site-nav');
+    const toggle = doc.querySelector('.nav-toggle');
+    toggle.click(); await tick();
+    check('menu opens on click', toggle.getAttribute('aria-expanded') === 'true' && win.getComputedStyle(nav).display !== 'none' && toggle.getAttribute('aria-label') === 'Close menu');
+    nav.querySelector('a[href="#portfolio"]').click(); await tick();
+    check('menu closes after choosing a link', toggle.getAttribute('aria-expanded') === 'false' && win.getComputedStyle(nav).display === 'none');
+    toggle.click(); await tick();
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })); await tick();
+    check('menu closes on Escape and returns focus', toggle.getAttribute('aria-expanded') === 'false' && doc.activeElement === toggle);
+  }
+
+  // --- Contact form (1440px) ---
+  {
+    const doc = document.getElementById('f1440').contentDocument;
+    const form = doc.getElementById('contact-form');
+    const [name, email, message] = ['name', 'email', 'message'].map((n) => doc.getElementById(n));
+    const status = form.querySelector('.form-status');
+    const err = (n) => doc.getElementById(`${n}-error`).textContent;
+    const submit = () => form.querySelector('button[type="submit"]').click();
+
+    submit(); await tick();
+    check('empty submit shows 3 errors', err('name') && err('email') && err('message') && status.textContent === '', [err('name'), err('email'), err('message')].join(' | '));
+    check('empty submit marks fields aria-invalid', [name, email, message].every((f) => f.getAttribute('aria-invalid') === 'true'));
+    check('empty submit focuses first invalid field', doc.activeElement === name);
+
+    name.value = 'Ana'; name.dispatchEvent(new Event('input'));
+    check('fixing a field clears its error as you type', err('name') === '' && name.getAttribute('aria-invalid') === 'false');
+
+    email.value = 'not-an-email'; message.value = 'Hello'; submit(); await tick();
+    check('invalid email rejected, others accepted', err('email') !== '' && err('name') === '' && err('message') === '' && doc.activeElement === email);
+
+    email.value = '   '; submit(); await tick();
+    check('whitespace-only email rejected', err('email') !== '');
+
+    email.value = 'ana@example.com'; submit(); await tick();
+    check('valid submit shows thank-you with name', status.textContent.includes('Thanks, Ana!'), status.textContent);
+    check('valid submit resets the form and clears invalid state', name.value === '' && email.value === '' && message.value === '' && !name.hasAttribute('aria-invalid'));
+    check('field errors linked via aria-describedby', [name, email, message].every((f) => f.getAttribute('aria-describedby') === `${f.id}-error`));
+  }
+
+  // --- Accessibility basics ---
+  {
+    const doc = document.getElementById('f1440').contentDocument;
+    check('exactly one h1', doc.querySelectorAll('h1').length === 1);
+    check('every img has alt', [...doc.images].every((i) => i.hasAttribute('alt')));
+    check('every form control has a label', [...doc.querySelectorAll('input, textarea')].every((f) => doc.querySelector(`label[for="${f.id}"]`)));
+    check('nav links point to existing sections', [...doc.querySelectorAll('nav a[href^="#"]')].every((a) => doc.querySelector(a.getAttribute('href'))));
+    check('html lang set', doc.documentElement.lang === 'en');
+  }
+
+  const failed = out.filter((l) => l.startsWith('FAIL')).length;
+  out.push(`\n${out.length - 0} checks, ${failed} failed`);
+  document.getElementById('results').textContent = out.join('\n');
+}
+
+window.addEventListener('load', () => setTimeout(() => run().catch((e) => {
+  document.getElementById('results').textContent = 'HARNESS ERROR: ' + e.stack;
+}), 300));
+</script>
+</body>
+</html>
