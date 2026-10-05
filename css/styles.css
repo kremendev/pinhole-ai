@@ -1,1 +1,328 @@
-/* Pinhole Photography styles. Filled in during the "Style with CSS" step. */
+/* ==========================================================================
+   Pinhole Photography
+   Brand rules: exactly 3 colours (custom properties below) and 2 fonts
+   (Montserrat Thin for headings, Open Sans for body text). Any tint or
+   transparency is derived from these variables with color-mix().
+   ========================================================================== */
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("../assets/fonts/Montserrat-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  src: url("../assets/fonts/OpenSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Colours (max 3) */
+  --brand: #004156;
+  --light: #ffffff;
+  --text: #333333;
+
+  /* Fonts (max 2) */
+  --font-heading: "Montserrat", sans-serif;
+  --font-body: "Open Sans", sans-serif;
+
+  --container: 1140px;
+  --gutter: 1.25rem;
+  --section-space: 4rem;
+  --radius: 4px;
+  --header-height: 72px;
+}
+
+/* ---------- Base ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-height);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--light);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 1rem;
+  line-height: 1.2;
+}
+
+h1,
+h2 {
+  font-family: var(--font-heading);
+  font-weight: 100;
+}
+
+h2 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: var(--brand);
+  text-align: center;
+}
+
+/* Short rule under each section heading */
+h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 2px;
+  margin: 1rem auto 0;
+  background: currentColor;
+}
+
+h3 {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+a {
+  color: var(--brand);
+}
+
+:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 3px;
+}
+
+.container {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 200;
+  padding: 0.5rem 1rem;
+  background: var(--light);
+  color: var(--brand);
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ---------- Header and navigation ---------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--brand);
+}
+
+.header-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  min-height: var(--header-height);
+}
+
+.logo img {
+  width: 120px;
+}
+
+.site-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav a {
+  display: inline-block;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid transparent;
+  color: var(--light);
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: border-color 0.2s;
+}
+
+.site-nav a:hover {
+  border-bottom-color: var(--light);
+}
+
+.site-header :focus-visible,
+.section-alt :focus-visible,
+.site-footer :focus-visible,
+.hero :focus-visible {
+  outline-color: var(--light);
+}
+
+.nav-toggle {
+  display: none;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  display: grid;
+  place-items: start center;
+  min-height: calc(100vh - var(--header-height));
+  min-height: calc(100svh - var(--header-height));
+  padding: clamp(4rem, 16vh, 9rem) var(--gutter) 4rem;
+  background:
+    linear-gradient(
+      color-mix(in srgb, var(--brand) 45%, transparent),
+      color-mix(in srgb, var(--brand) 5%, transparent)
+    ),
+    url("../assets/images/hero-mountains-1920.jpg") center 70% / cover no-repeat;
+  color: var(--light);
+  text-align: center;
+}
+
+.hero h1 {
+  max-width: 16ch;
+  margin: 0 auto 2rem;
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  text-wrap: balance;
+  text-shadow: 0 2px 16px color-mix(in srgb, var(--text) 70%, transparent);
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-block;
+  padding: 0.85rem 2rem;
+  border: 1px solid currentColor;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-light {
+  background: transparent;
+  color: var(--light);
+}
+
+.btn-light:hover {
+  background: var(--light);
+  color: var(--brand);
+}
+
+.btn-brand {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--light);
+}
+
+.btn-brand:hover {
+  background: var(--light);
+  color: var(--brand);
+}
+
+/* ---------- Sections ---------- */
+
+.section {
+  padding-block: var(--section-space);
+}
+
+.section-alt {
+  background: var(--brand);
+  color: var(--light);
+}
+
+.section-alt h2 {
+  color: var(--light);
+}
+
+.section-intro {
+  max-width: 60ch;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  background: var(--brand);
+  color: var(--light);
+  font-size: 0.875rem;
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding-block: 2.5rem;
+  text-align: center;
+}
+
+.site-footer img {
+  width: 110px;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer ul {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer a {
+  color: var(--light);
+}
+
+/* ---------- Motion preferences ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
