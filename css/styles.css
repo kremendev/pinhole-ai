@@ -377,6 +377,47 @@ a {
   text-transform: uppercase;
 }
 
+/* ---------- Testimonials ---------- */
+
+.testimonials {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.testimonial {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 2rem 1.75rem 1.75rem;
+  border-radius: var(--radius);
+  background: var(--light);
+  color: var(--text);
+}
+
+.testimonial blockquote {
+  flex: 1;
+  margin: 0;
+}
+
+.testimonial blockquote::before {
+  content: "\201C";
+  display: block;
+  height: 2.5rem;
+  font-family: var(--font-heading);
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--brand);
+}
+
+.testimonial figcaption {
+  padding-top: 1rem;
+  border-top: 1px solid var(--brand);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
 /* ---------- Footer ---------- */
 
 .site-footer {
